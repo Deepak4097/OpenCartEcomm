@@ -1,0 +1,36 @@
+# open cmd and navigate to the dir location where this yaml  is present 
+# use the command docker-compose up ===>to start and run the container
+# use the command docker-compose down ==>to stop running all the container services after execution done 
+  
+version: '3'
+
+services:
+  selenium-hub:
+    image: selenium/hub
+    ports:
+      - "4442-4444:4442-4444"
+    networks:
+      - grid
+
+  node-chrome:
+    image: selenium/node-chrome
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - grid
+
+  node-firefox:
+    image: selenium/node-firefox
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - grid
+      
+
+networks:
+  grid:
+    driver: bridge
